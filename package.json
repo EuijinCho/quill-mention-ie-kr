@@ -6,7 +6,7 @@
   "module": "dist/quill.mention.esm.js",
   "homepage": "https://github.com/EuijinCho/quill-mention-ie-kr",
   "repository": "https://github.com/EuijinCho/quill-mention-ie-kr.git",
-  "author": "Fredrik Sundqvist <fsundqvist@gmail.com>",
+  "author": "euijin cho <catsnetwork84@gmail.com>",
   "license": "MIT",
   "files": [
     "dist",
