@@ -1,6 +1,11 @@
 import Quill from "quill";
 import Keys from "./constants";
-import { attachDataValues, getMentionCharIndex, hasValidChars, hasValidMentionCharIndex } from "./utils";
+import {
+  attachDataValues,
+  getMentionCharIndex,
+  hasValidChars,
+  hasValidMentionCharIndex
+} from "./utils";
 import "./quill.mention.css";
 import "./blots/mention";
 
@@ -53,9 +58,9 @@ class Mention {
     };
 
     Object.assign(this.options, options, {
-      dataAttributes: Array.isArray(options.dataAttributes)
-        ? this.options.dataAttributes.concat(options.dataAttributes)
-        : this.options.dataAttributes
+      dataAttributes: Array.isArray(options.dataAttributes) ?
+        this.options.dataAttributes.concat(options.dataAttributes) :
+        this.options.dataAttributes
     });
 
     this.mentionContainer = document.createElement("div");
@@ -76,38 +81,33 @@ class Mention {
     quill.on("text-change", this.onTextChange.bind(this));
     quill.on("selection-change", this.onSelectionChange.bind(this));
 
-    quill.keyboard.addBinding(
-      {
+    quill.keyboard.addBinding({
         key: Keys.TAB
       },
       this.selectHandler.bind(this)
     );
     quill.keyboard.bindings[Keys.TAB].unshift(quill.keyboard.bindings[Keys.TAB].pop());
 
-    quill.keyboard.addBinding(
-      {
+    quill.keyboard.addBinding({
         key: Keys.ENTER
       },
       this.selectHandler.bind(this)
     );
     quill.keyboard.bindings[Keys.ENTER].unshift(quill.keyboard.bindings[Keys.ENTER].pop());
 
-    quill.keyboard.addBinding(
-      {
+    quill.keyboard.addBinding({
         key: Keys.ESCAPE
       },
       this.escapeHandler.bind(this)
     );
 
-    quill.keyboard.addBinding(
-      {
+    quill.keyboard.addBinding({
         key: Keys.UP
       },
       this.upHandler.bind(this)
     );
 
-    quill.keyboard.addBinding(
-      {
+    quill.keyboard.addBinding({
         key: Keys.DOWN
       },
       this.downHandler.bind(this)
@@ -189,7 +189,9 @@ class Mention {
   }
 
   getItemData() {
-    const { link } = this.mentionList.childNodes[this.itemIndex].dataset;
+    const {
+      link
+    } = this.mentionList.childNodes[this.itemIndex].dataset;
     const hasLinkValue = typeof link !== "undefined";
     const itemTarget = this.mentionList.childNodes[this.itemIndex].dataset.target;
     if (hasLinkValue) {
@@ -256,7 +258,7 @@ class Mention {
     this.selectItem();
   }
 
-  renderList(mentionChar, data, searchTerm, forceInsert = false) {
+  renderList(mentionChar, data, searchTerm, forceInsert = false, lastIndex = 0) {
     if (data && data.length > 0) {
       this.values = data;
       this.mentionList.innerHTML = "";
@@ -276,6 +278,8 @@ class Mention {
         this.itemIndex = 0;
         this.highlightItem();
         this.showMentionList();
+      } else {
+        this.itemIndex = lastIndex;
       }
     } else {
       this.hideMentionList();
@@ -413,7 +417,10 @@ class Mention {
 
     this.cursorPos = range.index;
     let textBeforeCursor = this.getTextBeforeCursor() || "";
-    const { mentionChar, mentionCharIndex } = getMentionCharIndex(textBeforeCursor, this.options.mentionDenotationChars);
+    const {
+      mentionChar,
+      mentionCharIndex
+    } = getMentionCharIndex(textBeforeCursor, this.options.mentionDenotationChars);
 
     if (hasValidMentionCharIndex(mentionCharIndex, textBeforeCursor, this.options.isolateCharacter)) {
       let isForceMoveCursor;
