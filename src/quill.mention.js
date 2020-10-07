@@ -148,6 +148,7 @@ class Mention {
   showMentionList() {
     this.mentionContainer.style.visibility = "hidden";
     this.mentionContainer.style.display = "";
+    this.mentionContainer.scrollTop = 0;
     this.setMentionContainerPosition();
     this.setIsOpen(true);
   }
