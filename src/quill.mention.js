@@ -1,11 +1,6 @@
 import Quill from "quill";
 import Keys from "./constants";
-import {
-  attachDataValues,
-  getMentionCharIndex,
-  hasValidChars,
-  hasValidMentionCharIndex
-} from "./utils";
+import { attachDataValues, getMentionCharIndex, hasValidChars, hasValidMentionCharIndex } from "./utils";
 import "./quill.mention.css";
 import "./blots/mention";
 
@@ -64,9 +59,7 @@ class Mention {
     });
 
     this.mentionContainer = document.createElement("div");
-    this.mentionContainer.className = this.options.mentionContainerClass
-      ? this.options.mentionContainerClass
-      : "";
+    this.mentionContainer.className = this.options.mentionContainerClass ? this.options.mentionContainerClass : "";
     this.mentionContainer.style.cssText = "display: none; position: absolute;";
     this.mentionContainer.onmousemove = this.onContainerMouseMove.bind(this);
 
@@ -75,9 +68,7 @@ class Mention {
     }
 
     this.mentionList = document.createElement("ul");
-    this.mentionList.className = this.options.mentionListClass
-      ? this.options.mentionListClass
-      : "";
+    this.mentionList.className = this.options.mentionListClass ? this.options.mentionListClass : "";
     this.mentionContainer.appendChild(this.mentionList);
 
     this.quill.container.appendChild(this.mentionContainer);
@@ -91,9 +82,7 @@ class Mention {
       },
       this.selectHandler.bind(this)
     );
-    quill.keyboard.bindings[Keys.TAB].unshift(
-      quill.keyboard.bindings[Keys.TAB].pop()
-    );
+    quill.keyboard.bindings[Keys.TAB].unshift(quill.keyboard.bindings[Keys.TAB].pop());
 
     quill.keyboard.addBinding(
       {
@@ -101,9 +90,7 @@ class Mention {
       },
       this.selectHandler.bind(this)
     );
-    quill.keyboard.bindings[Keys.ENTER].unshift(
-      quill.keyboard.bindings[Keys.ENTER].pop()
-    );
+    quill.keyboard.bindings[Keys.ENTER].unshift(quill.keyboard.bindings[Keys.ENTER].pop());
 
     quill.keyboard.addBinding(
       {
@@ -178,19 +165,25 @@ class Mention {
     this.mentionList.childNodes[this.itemIndex].classList.add("selected");
 
     if (scrollItemInView) {
-      const itemHeight = this.mentionList.childNodes[this.itemIndex]
-        .offsetHeight;
+      const itemHeight = this.mentionList.childNodes[this.itemIndex].offsetHeight;
+      const itemTop = this.mentionList.childNodes[this.itemIndex].offsetTop;
       const itemPos = this.itemIndex * itemHeight;
       const containerTop = this.mentionContainer.scrollTop;
       const containerBottom = containerTop + this.mentionContainer.offsetHeight;
 
-      if (itemPos < containerTop) {
-        // Scroll up if the item is above the top of the container
-        this.mentionContainer.scrollTop = itemPos;
-      } else if (itemPos > containerBottom - itemHeight) {
-        // scroll down if any part of the element is below the bottom of the container
-        this.mentionContainer.scrollTop +=
-          itemPos - containerBottom + itemHeight;
+      // if (itemPos < containerTop) {
+      //   // Scroll up if the item is above the top of the container
+      //   this.mentionContainer.scrollTop = itemPos;
+      // } else if (itemPos > containerBottom - itemHeight) {
+      //   // scroll down if any part of the element is below the bottom of the container
+      //   this.mentionContainer.scrollTop +=
+      //     itemPos - containerBottom + itemHeight;
+      // }
+
+      if (itemTop < containerTop) {
+        this.mentionContainer.scrollTop = itemTop + itemHeight - this.mentionContainer.offsetHeight;
+      } else if (itemTop + itemHeight > containerBottom) {
+        this.mentionContainer.scrollTop = itemTop - itemHeight;
       }
     }
   }
@@ -198,15 +191,10 @@ class Mention {
   getItemData() {
     const { link } = this.mentionList.childNodes[this.itemIndex].dataset;
     const hasLinkValue = typeof link !== "undefined";
-    const itemTarget = this.mentionList.childNodes[this.itemIndex].dataset
-      .target;
+    const itemTarget = this.mentionList.childNodes[this.itemIndex].dataset.target;
     if (hasLinkValue) {
-      this.mentionList.childNodes[
-        this.itemIndex
-      ].dataset.value = `<a href="${link}" target=${itemTarget ||
-        this.options.linkTarget}>${
-        this.mentionList.childNodes[this.itemIndex].dataset.value
-      }`;
+      this.mentionList.childNodes[this.itemIndex].dataset.value = `<a href="${link}" target=${itemTarget ||
+        this.options.linkTarget}>${this.mentionList.childNodes[this.itemIndex].dataset.value}`;
     }
     return this.mentionList.childNodes[this.itemIndex].dataset;
   }
@@ -235,17 +223,8 @@ class Mention {
 
     const prevMentionCharPos = this.mentionCharPos;
 
-    this.quill.deleteText(
-      this.mentionCharPos,
-      this.cursorPos - this.mentionCharPos,
-      Quill.sources.USER
-    );
-    this.quill.insertEmbed(
-      prevMentionCharPos,
-      this.options.blotName,
-      render,
-      Quill.sources.USER
-    );
+    this.quill.deleteText(this.mentionCharPos, this.cursorPos - this.mentionCharPos, Quill.sources.USER);
+    this.quill.insertEmbed(prevMentionCharPos, this.options.blotName, render, Quill.sources.USER);
     if (this.options.spaceAfterInsert) {
       this.quill.insertText(prevMentionCharPos + 1, " ", Quill.sources.USER);
       // setSelection here sets cursor position
@@ -284,17 +263,13 @@ class Mention {
 
       for (let i = 0; i < data.length; i += 1) {
         const li = document.createElement("li");
-        li.className = this.options.listItemClass
-          ? this.options.listItemClass
-          : "";
+        li.className = this.options.listItemClass ? this.options.listItemClass : "";
         li.dataset.index = i;
         li.innerHTML = this.options.renderItem(data[i], searchTerm);
         li.onmouseenter = this.onItemMouseEnter.bind(this);
         li.dataset.denotationChar = mentionChar;
         li.onclick = this.onItemClick.bind(this);
-        this.mentionList.appendChild(
-          attachDataValues(li, data[i], this.options.dataAttributes)
-        );
+        this.mentionList.appendChild(attachDataValues(li, data[i], this.options.dataAttributes));
       }
       this.itemIndex = 0;
       this.highlightItem();
@@ -311,15 +286,13 @@ class Mention {
   }
 
   prevItem() {
-    this.itemIndex =
-      (this.itemIndex + this.values.length - 1) % this.values.length;
+    this.itemIndex = (this.itemIndex + this.values.length - 1) % this.values.length;
     this.suspendMouseEnter = true;
     this.highlightItem();
   }
 
   containerBottomIsNotVisible(topPos, containerPos) {
-    const mentionContainerBottom =
-      topPos + this.mentionContainer.offsetHeight + containerPos.top;
+    const mentionContainerBottom = topPos + this.mentionContainer.offsetHeight + containerPos.top;
     return mentionContainerBottom > window.pageYOffset + window.innerHeight;
   }
 
@@ -328,10 +301,8 @@ class Mention {
       return false;
     }
 
-    const rightPos =
-      leftPos + this.mentionContainer.offsetWidth + containerPos.left;
-    const browserWidth =
-      window.pageXOffset + document.documentElement.clientWidth;
+    const rightPos = leftPos + this.mentionContainer.offsetWidth + containerPos.left;
+    const browserWidth = window.pageXOffset + document.documentElement.clientWidth;
     return rightPos > browserWidth;
   }
 
@@ -363,8 +334,7 @@ class Mention {
     }
 
     if (this.containerRightIsNotVisible(leftPos, containerPos)) {
-      const containerWidth =
-        this.mentionContainer.offsetWidth + this.options.offsetLeft;
+      const containerWidth = this.mentionContainer.offsetWidth + this.options.offsetLeft;
       const quillWidth = containerPos.width;
       leftPos = quillWidth - containerWidth;
     }
@@ -375,8 +345,7 @@ class Mention {
       if (this.options.fixMentionsToQuill) {
         topPos = -1 * (containerHeight + this.options.offsetTop);
       } else {
-        topPos =
-          mentionCharPos.top - (containerHeight + this.options.offsetTop);
+        topPos = mentionCharPos.top - (containerHeight + this.options.offsetTop);
       }
 
       // default to bottom if the top is not visible
@@ -412,12 +381,12 @@ class Mention {
     }
 
     if (topPos >= 0) {
-      this.options.mentionContainerClass.split(' ').forEach(className => {
+      this.options.mentionContainerClass.split(" ").forEach(className => {
         this.mentionContainer.classList.add(`${className}-bottom`);
         this.mentionContainer.classList.remove(`${className}-top`);
       });
     } else {
-      this.options.mentionContainerClass.split(' ').forEach(className => {
+      this.options.mentionContainerClass.split(" ").forEach(className => {
         this.mentionContainer.classList.add(`${className}-top`);
         this.mentionContainer.classList.remove(`${className}-bottom`);
       });
@@ -431,10 +400,7 @@ class Mention {
 
   getTextBeforeCursor() {
     const startPos = Math.max(0, this.cursorPos - this.options.maxChars);
-    const textBeforeCursorPos = this.quill.getText(
-      startPos,
-      this.cursorPos - startPos
-    );
+    const textBeforeCursorPos = this.quill.getText(startPos, this.cursorPos - startPos);
     return textBeforeCursorPos;
   }
 
@@ -444,15 +410,12 @@ class Mention {
 
     this.cursorPos = range.index;
     let textBeforeCursor = this.getTextBeforeCursor() || "";
-    const { mentionChar, mentionCharIndex } = getMentionCharIndex(
-      textBeforeCursor,
-      this.options.mentionDenotationChars
-    );
+    const { mentionChar, mentionCharIndex } = getMentionCharIndex(textBeforeCursor, this.options.mentionDenotationChars);
 
     if (hasValidMentionCharIndex(mentionCharIndex, textBeforeCursor, this.options.isolateCharacter)) {
       let isForceMoveCursor;
       if (this.isIE && this.quill.selection.composing) {
-        const retain = (Array.isArray(ops) && ops.length > 0 && ops[0].retain) ? ops[0].retain : -9999;
+        const retain = Array.isArray(ops) && ops.length > 0 && ops[0].retain ? ops[0].retain : -9999;
         isForceMoveCursor = retain === this.cursorPos;
         if (isForceMoveCursor) {
           this.cursorPos++;
@@ -466,7 +429,7 @@ class Mention {
       let textAfter = textBeforeCursor.substring(mentionCharIndex + mentionChar.length);
 
       if (this.isIE) {
-        textAfter = textAfter.replace(/\s/g,"");
+        textAfter = textAfter.replace(/\s/g, "");
       }
 
       const isLastCharKorean = !!textAfter.slice(-1).match(/[\uac00-\ud7a3]/);
