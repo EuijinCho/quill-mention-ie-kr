@@ -1,6 +1,6 @@
 {
   "name": "quill-mention-ie-kr",
-  "version": "0.0.5-development",
+  "version": "0.0.6-development",
   "description": "@mentions for the Quill rich text editor",
   "main": "dist/quill.mention.csj.js",
   "module": "dist/quill.mention.esm.js",

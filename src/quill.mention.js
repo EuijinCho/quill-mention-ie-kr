@@ -279,6 +279,7 @@ class Mention {
         this.showMentionList();
       } else {
         this.itemIndex = lastIndex;
+        this.highlightItem();
       }
     } else {
       this.hideMentionList();
