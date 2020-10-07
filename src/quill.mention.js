@@ -256,7 +256,7 @@ class Mention {
     this.selectItem();
   }
 
-  renderList(mentionChar, data, searchTerm) {
+  renderList(mentionChar, data, searchTerm, forceInsert = false) {
     if (data && data.length > 0) {
       this.values = data;
       this.mentionList.innerHTML = "";
@@ -271,9 +271,12 @@ class Mention {
         li.onclick = this.onItemClick.bind(this);
         this.mentionList.appendChild(attachDataValues(li, data[i], this.options.dataAttributes));
       }
-      this.itemIndex = 0;
-      this.highlightItem();
-      this.showMentionList();
+
+      if (!forceInsert) {
+        this.itemIndex = 0;
+        this.highlightItem();
+        this.showMentionList();
+      }
     } else {
       this.hideMentionList();
     }
